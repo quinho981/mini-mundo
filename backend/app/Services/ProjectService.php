@@ -16,4 +16,12 @@ class ProjectService
     {
         return Project::create($data);
     }
+
+    public function update(array $data, int $id): Project
+    {
+        $project = Project::findOrFail($id);
+        $project->update($data);
+
+        return $project;
+    }
 }
