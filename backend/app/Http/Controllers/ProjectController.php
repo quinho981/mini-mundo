@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProjectRequest;
 use App\Services\ProjectService;
-use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
@@ -18,5 +18,12 @@ class ProjectController extends Controller
     public function index()
     {
         return $this->projectService->getAll();
+    }
+
+    public function store(StoreProjectRequest $request)
+    {
+        $data = $request->validated();
+        
+        return $this->projectService->create($data);
     }
 }
