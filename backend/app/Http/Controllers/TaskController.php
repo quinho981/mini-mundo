@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Models\Project;
 use App\Models\Task;
 use App\Services\TaskService;
 use Illuminate\Database\Eloquent\Collection;
@@ -25,11 +26,11 @@ class TaskController extends Controller
         return Task::all();   
     }
     
-    public function store(StoreTaskRequest $request, int $projectId): Task
+    public function store(StoreTaskRequest $request, Project $project): Task
     {
-        $data = $request->validated();
-        
-        return Task::create(array_merge($data, ['project_id' => $projectId])); 
+        $task = $project->tasks()->create($request->validated());
+
+        return $task;
     }
 
     public function show(Task $task): Task
