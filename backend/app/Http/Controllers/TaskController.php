@@ -28,7 +28,7 @@ class TaskController extends Controller
     public function store(StoreTaskRequest $request, int $projectId): Task
     {
         $data = $request->validated();
-
+        
         return Task::create(array_merge($data, ['project_id' => $projectId])); 
     }
 
@@ -37,11 +37,12 @@ class TaskController extends Controller
         return $task;
     }
 
-    public function update(UpdateTaskRequest $request, Task $task)
+    public function update(UpdateTaskRequest $request, Task $task): Task
     {
         $data = $request->validated();
+        $task->update($data);
         
-        return $task->update($data);
+        return $task;
     }
 
     public function destroy(Task $task): JsonResponse
