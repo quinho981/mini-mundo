@@ -29,7 +29,7 @@ class TaskController extends Controller
     {
         $data = $request->validated();
 
-        return  Task::create(array_merge($data, ['project_id' => $projectId])); 
+        return Task::create(array_merge($data, ['project_id' => $projectId])); 
     }
 
     public function show(Task $task): Task
