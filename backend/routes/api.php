@@ -12,7 +12,7 @@ Route::prefix('projects')->group(function () {
     Route::patch('/{project}', [ProjectController::class, 'update']);
     Route::delete('/{project}', [ProjectController::class, 'destroy']);
 
-    Route::post('/{projectId}/task', [TaskController::class, 'index']);
+    Route::post('/{projectId}/task', [TaskController::class, 'store']);
 });
 
 Route::prefix('tasks')->group(function () {
