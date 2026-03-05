@@ -45,6 +45,12 @@ class ProjectController extends Controller
 
     public function destroy(Project $project): JsonResponse
     {
+        if($project->hasLinkedTask()) {
+            return response()->json([
+                'message' => 'This project has linked tasks and cannot be deleted.'
+            ], 422);
+        }
+
         $project->delete();
 
         return response()->json(['message' => 'Task deleted successfully']);
