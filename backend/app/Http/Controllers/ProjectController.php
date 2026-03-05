@@ -7,6 +7,8 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use App\Services\ProjectService;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 
 class ProjectController extends Controller
 {
@@ -17,27 +19,34 @@ class ProjectController extends Controller
         $this->projectService = $projectService;
     }
 
-    public function index()
+    public function index(): Collection
     {
         return $this->projectService->getAll();
     }
 
-    public function store(StoreProjectRequest $request)
+    public function store(StoreProjectRequest $request): Project
     {
         $data = $request->validated();
 
         return $this->projectService->create($data);
     }
 
-    public function show(Project $project)
+    public function show(Project $project): JsonResponse
     {
         return response()->json($project);
     }
 
-    public function update(UpdateProjectRequest $request, int $id)
+    public function update(UpdateProjectRequest $request, int $id): Project
     {
         $data = $request->validated();
 
         return $this->projectService->update($data, $id);
+    }
+
+    public function destroy(Project $project): JsonResponse
+    {
+        $project->delete();
+
+        return response()->json(['message' => 'Task deleted successfully']);
     }
 }

@@ -9,4 +9,5 @@ Route::prefix('projects')->group(function () {
     Route::post('/', [ProjectController::class, 'store']);
     Route::get('/{project}', [ProjectController::class, 'show']);
     Route::patch('/{project}', [ProjectController::class, 'update']);
+    Route::delete('/{project}', [ProjectController::class, 'destroy']);
 });
