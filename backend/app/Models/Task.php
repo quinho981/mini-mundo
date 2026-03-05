@@ -39,4 +39,9 @@ class Task extends Model
     {
         return $this->hasMany(Task::class, 'task_id');
     }
+
+    public function isPredecessor(): bool
+    {
+        return $this->subtasks()->exists();
+    }
 }

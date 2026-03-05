@@ -33,7 +33,7 @@ class TaskController extends Controller
         return $task;
     }
 
-    public function show(Task $task): Task
+    public function show(Task $task)
     {
         return $task;
     }
@@ -48,6 +48,12 @@ class TaskController extends Controller
 
     public function destroy(Task $task): JsonResponse
     {
+        if ($task->isPredecessor()) {
+            return response()->json([
+                'message' => 'This task has dependent tasks and cannot be deleted.'
+            ], 422);
+        }    
+
         $task->delete();
 
         return response()->json(['message' => 'Task deleted successfully']);

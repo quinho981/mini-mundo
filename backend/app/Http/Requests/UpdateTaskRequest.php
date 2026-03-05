@@ -25,7 +25,7 @@ class UpdateTaskRequest extends FormRequest
             'task_id' => 'sometimes|nullable|integer',
             'description' => 'sometimes|nullable|string',
             'start_date' => 'sometimes|nullable|date',
-            'end_date' => 'sometimes|nullable|date',
+            'end_date' => 'sometimes|nullable|date|after_or_equal:start_date',
             'status' => 'sometimes|required|in:completed,not_completed',
         ];
     }
