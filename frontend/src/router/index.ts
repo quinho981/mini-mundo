@@ -35,9 +35,9 @@ router.beforeEach((to, from, next) => {
     return next("/auth/login")
   }
 
-  if (to.meta.guest && token) {
-    return next("/projects")
-  }
+  // if (to.meta.guest && token) {
+  //   return next("/projects")
+  // }
 
   next()
 })
