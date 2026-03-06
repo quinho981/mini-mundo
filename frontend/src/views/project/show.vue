@@ -63,6 +63,7 @@
                     Tarefas
                 </h2>
                 <button
+                    @click="openCreateTask"
                     class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
                 >
                     + Nova tarefa
@@ -108,20 +109,20 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex justify-left gap-2">
-                                <router-link
-                                    :to="`/projects/${project.id}`"
+                                <button
+                                    @click="openViewTask(task)"
                                     class="text-blue-600 hover:underline text-sm"
                                 >
                                     Ver
-                                </router-link>
+                                </button>
                                 <button
-                                    @click="editProject(project.id)"
+                                    @click="openEditTask(task)"
                                     class="text-yellow-600 hover:underline text-sm"
                                 >
                                     Editar
                                 </button>
                                 <button
-                                    @click="deleteProject(project.id)"
+                                    @click="deleteTask(task.id)"
                                     class="text-red-600 hover:underline text-sm"
                                 >
                                     Deletar
@@ -138,6 +139,103 @@
             </table>
         </div>
     </div>
+
+    <div
+        v-if="showTaskModal"
+        class="fixed inset-0 backdrop-blur-sm bg-opacity-40 flex items-center justify-center"
+    >
+        <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6">
+
+            <h2 class="text-xl font-semibold mb-4">
+
+                <span v-if="taskMode === 'create'">Nova tarefa</span>
+                <span v-if="taskMode === 'edit'">Editar tarefa</span>
+                <span v-if="taskMode === 'view'">Detalhes da tarefa</span>
+
+            </h2>
+
+            <div class="space-y-4">
+
+                <div>
+                    <label class="text-sm text-gray-600">Descrição</label>
+
+                    <input
+                        v-model="taskForm.description"
+                        :disabled="taskMode === 'view'"
+                        class="w-full border rounded-lg px-3 py-2"
+                    />
+                </div>
+
+                <div>
+                    <label class="text-sm text-gray-600">Status</label>
+
+                    <select
+                        v-model="taskForm.status"
+                        :disabled="taskMode === 'view'"
+                        class="w-full border rounded-lg px-3 py-2"
+                    >
+                        <option value="not_completed">
+                            Não concluído
+                        </option>
+
+                        <option value="completed">
+                            Concluído
+                        </option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="text-sm text-gray-600">Data início</label>
+
+                    <input
+                        type="date"
+                        v-model="taskForm.start_date"
+                        :disabled="taskMode === 'view'"
+                        class="w-full border rounded-lg px-3 py-2"
+                    />
+                </div>
+
+                <div>
+                    <label class="text-sm text-gray-600">Data fim</label>
+
+                    <input
+                        type="date"
+                        v-model="taskForm.end_date"
+                        :disabled="taskMode === 'view'"
+                        class="w-full border rounded-lg px-3 py-2"
+                    />
+                </div>
+
+            </div>
+
+            <div class="flex justify-end gap-3 mt-6">
+
+                <button
+                    @click="closeTaskModal"
+                    class="px-4 py-2 bg-gray-200 rounded-lg"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    v-if="taskMode !== 'view'"
+                    @click="saveTask"
+                    :disabled="savingTask"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg flex items-center gap-2 disabled:opacity-50"
+                >
+                    <span v-if="savingTask">
+                        Salvando...
+                    </span>
+
+                    <span v-else>
+                        Salvar
+                    </span>
+                </button>
+
+            </div>
+
+        </div>
+    </div>
 </div>
 </template>
 
@@ -152,6 +250,93 @@ const router = useRouter()
 const project = ref(null)
 const tasks = ref([])
 const loading = ref(false)
+const showTaskModal = ref(false)
+const taskMode = ref("create")
+const savingTask = ref(false)
+
+const taskForm = ref({
+    id: null,
+    description: "",
+    status: "not_completed",
+    start_date: "",
+    end_date: ""
+})
+
+const openCreateTask = () => {
+    taskMode.value = "create"
+
+    taskForm.value = {
+        id: null,
+        description: "",
+        status: "not_completed",
+        start_date: "",
+        end_date: ""
+    }
+
+    showTaskModal.value = true
+}
+
+const openViewTask = (task) => {
+    taskMode.value = "view"
+    taskForm.value = normalizeTaskDates(task)
+    showTaskModal.value = true
+}
+
+const openEditTask = (task) => {
+    taskMode.value = "edit"
+    taskForm.value = normalizeTaskDates(task)
+    showTaskModal.value = true
+}
+
+const closeTaskModal = () => {
+    showTaskModal.value = false
+}
+
+const normalizeTaskDates = (task) => ({
+    ...task,
+    start_date: task.start_date?.split("T")[0] || null,
+    end_date: task.end_date?.split("T")[0] || null
+})
+
+const saveTask = async () => {
+    savingTask.value = true
+    
+    try {
+        const token = localStorage.getItem("token")
+
+        if (taskMode.value === "create") {
+            await axios.post(
+                `http://localhost:8000/api/projects/${route.params.id}/task`,
+                taskForm.value,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+        }
+
+        if (taskMode.value === "edit") {
+            await axios.patch(
+                `http://localhost:8000/api/tasks/${taskForm.value.id}`,
+                taskForm.value,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            )
+        }
+
+        await fetchTasks()
+
+        showTaskModal.value = false
+    } catch (error) {
+        console.error(error)
+    } finally {
+        savingTask.value = false
+    }
+}
 
 const fetchProject = async () => {
     loading.value = true
@@ -199,18 +384,14 @@ const fetchTasks = async () => {
     }
 }
 
-const editProject = () => {
-    router.push(`/projects/${route.params.id}/edit`)
-}
-
-const deleteProject = async () => {
-    if (!confirm("Are you sure you want to delete this project?")) return
+const deleteTask = async (id) => {
+    if (!confirm("Tem certeza que deseja excluir essa tarefa?")) return
 
     try {
         const token = localStorage.getItem("token")
 
         await axios.delete(
-            `http://localhost:8000/api/projects/${route.params.id}`,
+            `http://localhost:8000/api/tasks/${id}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -218,7 +399,7 @@ const deleteProject = async () => {
             }
         )
 
-        router.push("/projects")
+        fetchTasks()
     } catch (error) {
         console.error(error)
     }
