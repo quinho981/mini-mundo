@@ -94,13 +94,13 @@
                             {{ task.description }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ task.status }}
+                            {{ translateStatus(task.status) }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ task.start_date || "—" }}
+                            {{ formatDateBR(task.start_date) || "—" }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ task.end_date || "—" }}
+                            {{ formatDateBR(task.end_date) || "—" }}
                         </td>
                     </tr>
                     <tr v-if="tasks.length === 0">
@@ -143,7 +143,6 @@ const fetchProject = async () => {
         )
 
         project.value = response.data
-        tasks.value = response.data.tasks ?? []
     } catch (error) {
         console.error(error)
     } finally {
@@ -166,8 +165,7 @@ const fetchTasks = async () => {
             }
         )
 
-        project.value = response.data
-        tasks.value = response.data.tasks ?? []
+        tasks.value = response.data ?? []
     } catch (error) {
         console.error(error)
     } finally {
@@ -202,7 +200,21 @@ const formatBudget = (value) => {
     return Number(value).toFixed(2)
 }
 
+const translateStatus = (status) => {
+    if (status == 'completed') return 'Concluído'
+    if (status == 'not_completed') return 'Não concluído'
+}
+
+const formatDateBR = (dateString) => {
+    const date = new Date(dateString);
+
+    return date.toLocaleDateString('pt-BR', {
+        timeZone: 'UTC'
+    });
+}
+
 onMounted(() => {
     fetchProject()
+    fetchTasks()
 })
 </script>

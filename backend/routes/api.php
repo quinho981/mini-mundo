@@ -22,6 +22,7 @@ Route::middleware('auth:api')->group(function () {
         Route::patch('/{project}', [ProjectController::class, 'update']);
         Route::delete('/{project}', [ProjectController::class, 'destroy']);
 
+        Route::get('/{project}/tasks', [TaskController::class, 'getTaskByProject']);
         Route::post('/{project}/task', [TaskController::class, 'store']);
     });
 
