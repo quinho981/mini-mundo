@@ -123,7 +123,7 @@ const fetchProjects = async () => {
 
         projects.value = response.data
     } catch (error) {
-        console.error(error)
+        alert(error.response?.data?.message || "Erro ao buscar os projetos, reinicie a página.")
     } finally {
         loading.value = false
     }
@@ -156,7 +156,7 @@ const deleteProject = async (id) => {
 
         projects.value = projects.value.filter(p => p.id !== id)
     } catch (error) {
-        console.error(error)
+            alert(error.response?.data?.message || "Erro ao deletar o projeto. Tente novamente.")
     }
 }
 

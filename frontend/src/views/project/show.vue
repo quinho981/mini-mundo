@@ -79,6 +79,9 @@
                             Status
                         </th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                            Predecessora
+                        </th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
                             Data início
                         </th>
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
@@ -100,6 +103,14 @@
                         </td>
                         <td class="px-6 py-4">
                             {{ translateTaskStatus(task.status) }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <span v-if="task.task_id">
+                                {{ getPredecessor(task.task_id)?.description || '-' }}
+                            </span>
+                            <span v-else class="text-gray-400">
+                                -
+                            </span>
                         </td>
                         <td class="px-6 py-4">
                             {{ formatDateBR(task.start_date) }}
@@ -139,36 +150,28 @@
             </table>
         </div>
     </div>
-
     <div
         v-if="showTaskModal"
         class="fixed inset-0 backdrop-blur-sm bg-opacity-40 flex items-center justify-center"
     >
         <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6">
-
             <h2 class="text-xl font-semibold mb-4">
-
                 <span v-if="taskMode === 'create'">Nova tarefa</span>
                 <span v-if="taskMode === 'edit'">Editar tarefa</span>
                 <span v-if="taskMode === 'view'">Detalhes da tarefa</span>
 
             </h2>
-
             <div class="space-y-4">
-
                 <div>
                     <label class="text-sm text-gray-600">Descrição</label>
-
                     <input
                         v-model="taskForm.description"
                         :disabled="taskMode === 'view'"
                         class="w-full border rounded-lg px-3 py-2"
                     />
                 </div>
-
                 <div>
                     <label class="text-sm text-gray-600">Status</label>
-
                     <select
                         v-model="taskForm.status"
                         :disabled="taskMode === 'view'"
@@ -177,16 +180,30 @@
                         <option value="not_completed">
                             Não concluído
                         </option>
-
                         <option value="completed">
                             Concluído
                         </option>
                     </select>
                 </div>
-
+                <div>
+                    <label class="text-sm text-gray-600">Tarefa predecessora</label>
+                    <select
+                        v-model="taskForm.task_id"
+                        :disabled="taskMode === 'view'"
+                        class="w-full border rounded-lg px-3 py-2"
+                    >
+                        <option :value="null">Nenhuma</option>
+                        <option
+                            v-for="task in availablePredecessors"
+                            :key="task.id"
+                            :value="task.id"
+                        >
+                            {{ task.description }}
+                        </option>
+                    </select>
+                </div>
                 <div>
                     <label class="text-sm text-gray-600">Data início</label>
-
                     <input
                         type="date"
                         v-model="taskForm.start_date"
@@ -194,10 +211,8 @@
                         class="w-full border rounded-lg px-3 py-2"
                     />
                 </div>
-
                 <div>
                     <label class="text-sm text-gray-600">Data fim</label>
-
                     <input
                         type="date"
                         v-model="taskForm.end_date"
@@ -205,18 +220,14 @@
                         class="w-full border rounded-lg px-3 py-2"
                     />
                 </div>
-
             </div>
-
             <div class="flex justify-end gap-3 mt-6">
-
                 <button
                     @click="closeTaskModal"
                     class="px-4 py-2 bg-gray-200 rounded-lg"
                 >
                     Cancelar
                 </button>
-
                 <button
                     v-if="taskMode !== 'view'"
                     @click="saveTask"
@@ -226,21 +237,18 @@
                     <span v-if="savingTask">
                         Salvando...
                     </span>
-
                     <span v-else>
                         Salvar
                     </span>
                 </button>
-
             </div>
-
         </div>
     </div>
 </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, onMounted, computed } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import axios from "axios"
 
@@ -259,8 +267,17 @@ const taskForm = ref({
     description: "",
     status: "not_completed",
     start_date: "",
-    end_date: ""
+    end_date: "",
+    task_id: null
 })
+
+const availablePredecessors = computed(() => {
+    return tasks.value.filter(task => task.id !== taskForm.value.id)
+})
+
+const getPredecessor = (taskId) => {
+    return tasks.value.find(t => t.id === taskId)
+}
 
 const openCreateTask = () => {
     taskMode.value = "create"
@@ -270,7 +287,8 @@ const openCreateTask = () => {
         description: "",
         status: "not_completed",
         start_date: "",
-        end_date: ""
+        end_date: "",
+        task_id: null
     }
 
     showTaskModal.value = true
@@ -295,7 +313,8 @@ const closeTaskModal = () => {
 const normalizeTaskDates = (task) => ({
     ...task,
     start_date: task.start_date?.split("T")[0] || null,
-    end_date: task.end_date?.split("T")[0] || null
+    end_date: task.end_date?.split("T")[0] || null,
+    task_id: task.task_id ?? null
 })
 
 const saveTask = async () => {
@@ -332,7 +351,7 @@ const saveTask = async () => {
 
         showTaskModal.value = false
     } catch (error) {
-        console.error(error)
+        alert(error.response?.data?.message || "Erro! Tente novamente.")
     } finally {
         savingTask.value = false
     }
@@ -355,7 +374,7 @@ const fetchProject = async () => {
 
         project.value = response.data
     } catch (error) {
-        console.error(error)
+            alert(error.response?.data?.message || "Erro ao buscar o projeto, reinicie a página.")
     } finally {
         loading.value = false
     }
@@ -378,7 +397,7 @@ const fetchTasks = async () => {
 
         tasks.value = response.data ?? []
     } catch (error) {
-        console.error(error)
+        alert(error.response?.data?.message || "Erro ao buscar as tarefas, reinicie a página.")
     } finally {
         loading.value = false
     }
@@ -401,7 +420,7 @@ const deleteTask = async (id) => {
 
         fetchTasks()
     } catch (error) {
-        console.error(error)
+        alert(error.response?.data?.message || "Erro ao deletar tarefa")
     }
 }
 
