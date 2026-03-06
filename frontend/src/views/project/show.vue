@@ -102,10 +102,10 @@
                             {{ translateTaskStatus(task.status) }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ formatDateBR(task.start_date) || "—" }}
+                            {{ formatDateBR(task.start_date) }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ formatDateBR(task.end_date) || "—" }}
+                            {{ formatDateBR(task.end_date) }}
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex justify-left gap-2">
@@ -422,6 +422,8 @@ const translateTaskStatus = (status) => {
 }
 
 const formatDateBR = (dateString) => {
+    if(!dateString) return '-';
+
     const date = new Date(dateString);
 
     return date.toLocaleDateString('pt-BR', {
