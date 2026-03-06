@@ -18,6 +18,7 @@
                     Voltar
                 </button>
                 <button
+                    @click="editProject"
                     class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
                 >
                     Editar
@@ -82,6 +83,9 @@
                         <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
                             Data fim
                         </th>
+                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                            Ações
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -101,6 +105,28 @@
                         </td>
                         <td class="px-6 py-4">
                             {{ formatDateBR(task.end_date) || "—" }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex justify-left gap-2">
+                                <router-link
+                                    :to="`/projects/${project.id}`"
+                                    class="text-blue-600 hover:underline text-sm"
+                                >
+                                    Ver
+                                </router-link>
+                                <button
+                                    @click="editProject(project.id)"
+                                    class="text-yellow-600 hover:underline text-sm"
+                                >
+                                    Editar
+                                </button>
+                                <button
+                                    @click="deleteProject(project.id)"
+                                    class="text-red-600 hover:underline text-sm"
+                                >
+                                    Deletar
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <tr v-if="tasks.length === 0">
@@ -171,6 +197,10 @@ const fetchTasks = async () => {
     } finally {
         loading.value = false
     }
+}
+
+const editProject = () => {
+    router.push(`/projects/${route.params.id}/edit`)
 }
 
 const deleteProject = async () => {
