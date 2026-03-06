@@ -2,16 +2,16 @@
 <div class="min-h-screen grid md:grid-cols-2">
     <div class="hidden md:flex flex-col justify-center items-center bg-blue-600 text-white p-12">
         <h1 class="text-4xl font-bold mb-4">
-            Project Manager
+            Gestão de projetos
         </h1>
         <p class="text-lg text-blue-100 text-center max-w-md">
-            Organize your projects, manage tasks and collaborate with your team efficiently.
+            Organize seus projetos, gerencia tarefas e colabore com seu time de forma eficiente.
         </p>
     </div>
     <div class="flex items-center justify-center bg-gray-50 p-6">
         <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
             <h2 class="text-2xl font-bold mb-6 text-center">
-                Sign in
+                Entrar
             </h2>
             <form @submit.prevent="handleLogin" class="space-y-4">
                 <div>
@@ -28,7 +28,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">
-                        Password
+                        Senha
                     </label>
                     <input
                         v-model="password"
@@ -41,13 +41,13 @@
                 <button
                     class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
                 >
-                    Sign in
+                    Entrar
                 </button>
             </form>
             <p class="text-sm text-center mt-4">
-                Don't have an account?
+                Ainda não tem uma conta?
                 <router-link to="/auth/register" class="text-blue-600 font-medium hover:underline">
-                    Register
+                    Registre-se
                 </router-link>
             </p>
         </div>
@@ -81,7 +81,7 @@ const handleLogin = async () => {
 
         router.push("/")
     } catch (err) {
-        error.value = "Invalid credentials"
+        error.value = "Credênciais invalidas!"
     } finally {
         loading.value = false
     }

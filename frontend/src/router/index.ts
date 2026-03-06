@@ -1,7 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Hello from '@/views/Hello.vue'
-import Login from '@/views/Login.vue'
-import Register from '@/views/Register.vue'
+import Login from '@/views/auth/Login.vue'
+import Register from '@/views/auth/Register.vue'
+
+import Projects from '@/views/project/index.vue'
+import ProjectShow from '@/views/project/show.vue'
+import ProjectCreate from '@/views/project/create.vue'
+import ProjectEdit from '@/views/project/edit.vue'
 
 const routes = [
   {
@@ -11,15 +16,39 @@ const routes = [
   },
   {
     path: '/auth/login',
-    name: 'login',
+    name: 'auth.login',
     component: Login,
     meta: { guest: true }
   },
   {
     path: '/auth/register',
-    name: 'register',
+    name: 'auth.register',
     component: Register,
     meta: { guest: true }
+  },
+  {
+    path: '/projects',
+    name: 'projects.index',
+    component: Projects,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/projects/create',
+    name: 'projects.create',
+    component: ProjectCreate,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/projects/:id',
+    name: 'projects.show',
+    component: ProjectShow,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/projects/:id/edit',
+    name: 'projects.edit',
+    component: ProjectEdit,
+    meta: { requiresAuth: true }
   },
 ]
 

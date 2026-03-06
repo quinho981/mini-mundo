@@ -58,4 +58,9 @@ class TaskController extends Controller
 
         return response()->json(['message' => 'Task deleted successfully']);
     }
+
+    public function getTaskByProject(Project $project)
+    {
+        return $project->tasks()->get();   
+    }
 }
