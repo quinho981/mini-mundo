@@ -4,21 +4,21 @@
 
     <div class="hidden md:flex flex-col justify-center items-center bg-green-600 text-white p-12">
         <h1 class="text-4xl font-bold mb-4">
-            Create your account
+            Crie sua conta
         </h1>
         <p class="text-lg text-green-100 text-center max-w-md">
-            Start organizing your projects and managing tasks in a simple and efficient way.
+            Comece a organizar seus projetos e gerenciar tarefas de forma simples e eficiente.
         </p>
     </div>
     <div class="flex items-center justify-center bg-gray-50 p-6">
         <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
             <h2 class="text-2xl font-bold mb-6 text-center">
-                Register
+                Registrar
             </h2>
             <form @submit.prevent="handleRegister" class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium mb-1">
-                        Name
+                        Nome
                     </label>
                     <input
                         v-model="name"
@@ -42,7 +42,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">
-                        Password
+                        Senha
                     </label>
                     <input
                         v-model="password"
@@ -54,7 +54,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1">
-                        Confirm password
+                        Confirmar senha
                     </label>
                     <input
                         v-model="password_confirmation"
@@ -77,7 +77,7 @@
                 </button>
             </form>
             <p class="text-sm text-center mt-4">
-                Already have an account?
+                Já possui uma conta?
                 <router-link
                     to="/auth/login"
                     class="text-blue-600 font-medium hover:underline"
@@ -121,7 +121,7 @@ const handleRegister = async () => {
         toast.add({
             severity: "success",
             summary: "Success",
-            detail: "Account created successfully",
+            detail: "Conta criada com sucesso!",
             life: 3000
         })
 
@@ -130,11 +130,11 @@ const handleRegister = async () => {
         toast.add({
             severity: "error",
             summary: "Error",
-            detail: "Register failed",
+            detail: "Registro falhou!",
             life: 3000
         })
 
-        error.value = "Register failed"
+        error.value = "Registro falhou!"
     } finally {
         loading.value = false
     }
