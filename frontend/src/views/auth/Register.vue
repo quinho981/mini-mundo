@@ -23,7 +23,7 @@
                     <input
                         v-model="name"
                         type="text"
-                        placeholder="Your name"
+                        placeholder="Seu nome"
                         class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none"
                         required
                     />
@@ -73,7 +73,7 @@
                 >
                     <span v-if="loading" class="animate-spin border-2 border-white border-t-transparent rounded-full w-4 h-4"></span>
 
-                    {{ loading ? 'Creating account...' : 'Create account' }}
+                    {{ loading ? 'Criando conta...' : 'Criar conta' }}
                 </button>
             </form>
             <p class="text-sm text-center mt-4">

@@ -5,7 +5,6 @@
             Gestão de projetos
         </h1>
         <p class="text-lg text-blue-100 text-center max-w-md">
-            Organize your projects, manage tasks and collaborate with your team efficiently.
             Organize seus projetos, gerencia tarefas e colabore com seu time de forma eficiente.
         </p>
     </div>
