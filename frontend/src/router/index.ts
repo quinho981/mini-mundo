@@ -12,12 +12,14 @@ const routes = [
   {
     path: '/auth/login',
     name: 'login',
-    component: Login
+    component: Login,
+    meta: { guest: true }
   },
   {
     path: '/auth/register',
     name: 'register',
-    component: Register
+    component: Register,
+    meta: { guest: true }
   },
 ]
 
@@ -29,8 +31,12 @@ export const router = createRouter({
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token")
 
-  if (!token && to.path.startsWith("/projects")) {
-      return next("/auth/login")
+  if (to.meta.requiresAuth && !token) {
+    return next("/auth/login")
+  }
+
+  if (to.meta.guest && token) {
+    return next("/projects")
   }
 
   next()
