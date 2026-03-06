@@ -34,8 +34,8 @@
                     v-model="form.status"
                     class="w-full border rounded-lg px-3 py-2"
                 >
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
+                    <option value="active">Ativo</option>
+                    <option value="inactive">Inativo</option>
                 </select>
             </div>
             <div>
@@ -59,9 +59,16 @@
                 </button>
                 <button
                     type="submit"
+                    :disabled="loading"
                     class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
                 >
-                    Criar Projeto
+                    <span v-if="loading">
+                        Criando...
+                    </span>
+
+                    <span v-else>
+                        Criar Projeto
+                    </span>
                 </button>
             </div>
         </form>
@@ -70,12 +77,13 @@
 </template>
 
 <script setup>
-import { reactive } from "vue"
+import { reactive, ref } from "vue"
 import axios from "axios"
 import { useRouter } from "vue-router"
 
 const router = useRouter()
 
+const loading = ref(false)
 const form = reactive({
     name: "",
     description: "",
@@ -84,6 +92,7 @@ const form = reactive({
 })
 
 const createProject = async () => {
+    loading.value = true
     try {
         const token = localStorage.getItem("token")
         const payload = {
@@ -104,6 +113,8 @@ const createProject = async () => {
         router.push("/projects")
     } catch (error) {
         console.error(error)
+    } finally {
+        loading.value = false
     }
 }
 </script>

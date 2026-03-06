@@ -39,9 +39,15 @@
                     />
                 </div>
                 <button
+                :disabled="loading"
                     class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
                 >
-                    Entrar
+                    <span v-if="loading">
+                        Entrando...
+                    </span>
+                    <span v-else>
+                        Entrar
+                    </span>
                 </button>
             </form>
             <p class="text-sm text-center mt-4">
@@ -79,7 +85,7 @@ const handleLogin = async () => {
 
         localStorage.setItem("token", response.token)
 
-        router.push("/")
+        router.push("/projects")
     } catch (err) {
         error.value = "Credênciais invalidas!"
     } finally {

@@ -46,7 +46,7 @@
                             {{ project.name }}
                         </td>
                         <td class="px-6 py-4 text-gray-500">
-                            {{ project.description || '—' }}
+                            {{ truncate(project.description, 90) || '—' }}
                         </td>
                         <td class="px-6 py-4">
                             <span
@@ -55,7 +55,7 @@
                                     ? 'bg-green-100 text-green-700'
                                     : 'bg-gray-200 text-gray-600'"
                             >
-                                {{ project.status }}
+                                {{ translateProjectStatus(project.status) }}
                             </span>
                         </td>
                         <td class="px-6 py-4">
@@ -123,7 +123,7 @@ const fetchProjects = async () => {
 
         projects.value = response.data
     } catch (error) {
-        console.error(error)
+        alert(error.response?.data?.message || "Erro ao buscar os projetos, reinicie a página.")
     } finally {
         loading.value = false
     }
@@ -156,14 +156,24 @@ const deleteProject = async (id) => {
 
         projects.value = projects.value.filter(p => p.id !== id)
     } catch (error) {
-        console.error(error)
+            alert(error.response?.data?.message || "Erro ao deletar o projeto. Tente novamente.")
     }
+}
+
+const translateProjectStatus = (status) => {
+    if (status == 'active') return 'Ativo'
+    if (status == 'inactive') return 'Inativo'
 }
 
 const formatBudget = (value) => {
     if (!value) return "0.00"
 
     return Number(value).toFixed(2)
+}
+
+const truncate = (text, length) => {
+  if (!text) return ''
+  return text.length > length ? text.slice(0, length) + '…' : text
 }
 
 onMounted(() => {

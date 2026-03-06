@@ -32,8 +32,8 @@
                     v-model="form.status"
                     class="w-full border rounded-lg px-3 py-2"
                 >
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
+                    <option value="active">Ativo</option>
+                    <option value="inactive">Inativo</option>
                 </select>
             </div>
             <div>
@@ -57,9 +57,16 @@
                 </button>
                 <button
                     type="submit"
+                    :disabled="loadUpdate"
                     class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                 >
-                    Atualizar
+                    <span v-if="loadUpdate">
+                        Atualizando...
+                    </span>
+
+                    <span v-else>
+                        Atualizar
+                    </span>
                 </button>
             </div>
         </form>
@@ -79,6 +86,7 @@ const router = useRouter()
 const route = useRoute()
 
 const loaded = ref(false)
+const loadUpdate = ref(false)
 
 const form = reactive({
     name: "",
@@ -108,6 +116,7 @@ const fetchProject = async () => {
 }
 
 const updateProject = async () => {
+    loadUpdate.value = true
     try {
         const token = localStorage.getItem("token")
 
@@ -124,6 +133,8 @@ const updateProject = async () => {
         router.push("/projects")
     } catch (error) {
         console.error(error)
+    } finally {
+        loadUpdate.value = false
     }
 }
 
