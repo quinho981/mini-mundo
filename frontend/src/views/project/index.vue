@@ -6,6 +6,7 @@
                 Projetos
             </h1>
             <button
+                @click="newProject"
                 class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
             >
                 + Novo Projeto
@@ -66,20 +67,20 @@
                                     :to="`/projects/${project.id}`"
                                     class="text-blue-600 hover:underline text-sm"
                                 >
-                                    View
+                                    Ver
                                 </router-link>
-                                <router-link
-                                    :to="`/projects/${project.id}`"
-                                    class="text-blue-600 hover:underline text-sm"
+                                <button
+                                    @click="editProject(project.id)"
+                                    class="text-yellow-600 hover:underline text-sm"
                                 >
-                                    Edit
-                                </router-link>
-                                <router-link
-                                    :to="`/projects/${project.id}`"
-                                    class="text-blue-600 hover:underline text-sm"
+                                    Editar
+                                </button>
+                                <button
+                                    @click="deleteProject(project.id)"
+                                    class="text-red-600 hover:underline text-sm"
                                 >
-                                    Delete
-                                </router-link>
+                                    Deletar
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -98,6 +99,9 @@
 <script setup>
 import { ref, onMounted } from "vue"
 import axios from "axios"
+import { useRouter } from "vue-router"
+
+const router = useRouter()
 
 const projects = ref([])
 const loading = ref(false)
@@ -122,6 +126,37 @@ const fetchProjects = async () => {
         console.error(error)
     } finally {
         loading.value = false
+    }
+}
+
+const newProject = () => {
+    router.push("/projects/create")
+}
+
+const editProject = (id) => {
+    router.push(`/projects/${id}/edit`)
+}
+
+const deleteProject = async (id) => {
+    if (!confirm("Tem certeza que deseja deletar este projeto?")) {
+        return
+    }
+
+    try {
+        const token = localStorage.getItem("token")
+
+        await axios.delete(
+            `http://localhost:8000/api/projects/${id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+
+        projects.value = projects.value.filter(p => p.id !== id)
+    } catch (error) {
+        console.error(error)
     }
 }
 

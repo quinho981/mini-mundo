@@ -36,7 +36,7 @@
                     Status
                 </p>
                 <p class="text-lg font-semibold mt-1">
-                    {{ project?.status }}
+                    {{ translateProjectStatus(project?.status) }}
                 </p>
             </div>
             <div class="bg-white p-6 rounded-xl shadow">
@@ -94,7 +94,7 @@
                             {{ task.description }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ translateStatus(task.status) }}
+                            {{ translateTaskStatus(task.status) }}
                         </td>
                         <td class="px-6 py-4">
                             {{ formatDateBR(task.start_date) || "—" }}
@@ -200,7 +200,12 @@ const formatBudget = (value) => {
     return Number(value).toFixed(2)
 }
 
-const translateStatus = (status) => {
+const translateProjectStatus = (status) => {
+    if (status == 'active') return 'Ativo'
+    if (status == 'inactive') return 'Inativo'
+}
+
+const translateTaskStatus = (status) => {
     if (status == 'completed') return 'Concluído'
     if (status == 'not_completed') return 'Não concluído'
 }
