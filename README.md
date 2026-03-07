@@ -80,5 +80,5 @@ docker compose exec app php artisan migrate --seed
 ---
 
 Acessando a aplicação
-- http://localhost:5173/
+- http://localhost:5173/auth/login
 - MySQL: localhost:3306
