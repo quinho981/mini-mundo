@@ -31,7 +31,7 @@ jobs:
 
       - name: Build Frontend
         run: |
-          docker build -t icarovinicius/mini-mundo-frontend:${{ github.ref_name }} -f docker/vue/Dockerfile .
+          docker build -t icarovinicius/mini-mundo-frontend:${{ github.ref_name }} -f docker/vue/Dockerfile ./frontend
 
       - name: Push Frontend
         run: |
