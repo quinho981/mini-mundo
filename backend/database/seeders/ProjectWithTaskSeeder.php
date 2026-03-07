@@ -14,7 +14,7 @@ class ProjectWithTaskSeeder extends Seeder
     public function run(): void
     {
         Project::factory()
-            ->count(2)
+            ->count(1)
             ->create()
             ->each(fn ($project) =>
                 $project->tasks()->saveMany(
