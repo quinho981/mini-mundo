@@ -29,6 +29,12 @@
                 >
                     Deletar
                 </button>
+                <button
+                    @click="logout"
+                    class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                >
+                    <i class="pi pi-sign-out"></i>
+                </button>
             </div>
         </div>
         <div class="grid grid-cols-3 gap-6 mb-10">
@@ -421,6 +427,28 @@ const deleteTask = async (id) => {
         fetchTasks()
     } catch (error) {
         alert(error.response?.data?.message || "Erro ao deletar tarefa")
+    }
+}
+
+const logout = async () => {
+    if (!confirm("Deseja sair do sistema?")) return
+
+    try {
+        const token = localStorage.getItem("token")
+
+        await axios.post(
+            `http://localhost:8000/api/auth/logout`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+    } catch (error) {
+        alert(error.response?.data?.message || "Erro. Tente novamente")
+    } finally {
+        localStorage.removeItem("token")
+        router.push("/auth/login")
     }
 }
 

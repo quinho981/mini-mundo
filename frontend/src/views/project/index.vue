@@ -5,12 +5,20 @@
             <h1 class="text-3xl font-bold">
                 Projetos
             </h1>
-            <button
-                @click="newProject"
-                class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
-            >
-                + Novo Projeto
-            </button>
+            <div class="flex gap-2">
+                <button
+                    @click="newProject"
+                    class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+                >
+                    + Novo Projeto
+                </button>
+                <button
+                    @click="logout"
+                    class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                >
+                    <i class="pi pi-sign-out"></i>
+                </button>
+            </div>
         </div>
         <div v-if="loading" class="text-center py-20">
             Carregando projetos...
@@ -157,6 +165,26 @@ const deleteProject = async (id) => {
         projects.value = projects.value.filter(p => p.id !== id)
     } catch (error) {
             alert(error.response?.data?.message || "Erro ao deletar o projeto. Tente novamente.")
+    }
+}
+
+const logout = async () => {
+    if (!confirm("Deseja sair do sistema?")) return
+
+    try {
+        const token = localStorage.getItem("token")
+
+        await axios.post(
+            `http://localhost:8000/api/auth/logout`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+    } finally {
+        localStorage.removeItem("token")
+        router.push("/auth/login")
     }
 }
 
