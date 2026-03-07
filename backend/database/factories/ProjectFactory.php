@@ -16,8 +16,21 @@ class ProjectFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            //
+        $projects = [
+            [
+                'name' => 'Projeto Horizonte Digital',
+                'description' => 'Iniciativa voltada à modernização de processos internos por meio de soluções digitais e automação operacional.',
+                'status' => 'active',
+                'budget' => '75.00'
+            ],
+            [
+                'name' => 'Projeto Atlas Corporativo',
+                'description' => 'Estruturação e padronização de fluxos corporativos para aumento de produtividade e governança.',
+                'status' => 'active',
+                'budget' => '50.00'
+            ],
         ];
+
+        return $this->faker->randomElement($projects);
     }
 }

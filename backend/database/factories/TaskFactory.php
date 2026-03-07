@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +17,27 @@ class TaskFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            //
+        $tasks = [
+            [
+                'description' => 'Definir requisitos do sistema',
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addDay(),
+                'status' => 'not_completed',
+            ],
+            [
+                'description' => 'Configurar ambiente de desenvolvimento',
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addDay(),
+                'status' => 'not_completed',
+            ],
+            [
+                'description' => 'Implementar autenticação de usuários',
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addDay(),
+                'status' => 'not_completed',
+            ],
         ];
+
+        return $this->faker->randomElement($tasks);
     }
 }
