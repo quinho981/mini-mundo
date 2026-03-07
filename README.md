@@ -3,6 +3,18 @@
 📊 Sistema full stack para gerenciamento de projetos e tarefas com autenticação JWT.
 Desenvolvido com Laravel no backend e Vue 3 no frontend, seguindo boas práticas de arquitetura e ambiente Dockerizado.
 
+## 📸 Previews
+
+<p align="center">
+  <img src="docs/images/login.png" width="45%">
+  <img src="docs/images/register.png" width="45%">
+</p>
+
+<p align="center">
+  <img src="docs/images/home.png" width="45%">
+  <img src="docs/images/detail.png" width="45%">
+</p>
+
 🚀 Tecnologias
 - PHP 8.2+
 - Laravel
